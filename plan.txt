@@ -1,0 +1,11 @@
+state variables
+-turn: 1/-1 to represent who is playing
+    make sure both values are truthy
+-board: 2D array
+    null = no player
+    1/-1 = player at that cell
+-winner:   // could also be game status
+    null = no winner / in play
+    1/-1 = winner
+    "T" = tie
+-
