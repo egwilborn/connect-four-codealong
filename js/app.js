@@ -58,18 +58,52 @@ function handleDrop(evt) {
  }
  //check for winner in board state and reutnr null if no winer, -1 and 1 if a player has won, "T" if tie
 function getWinner(colIdx, rowIdx) {
-    return checkVerticalWin(colIdx,rowIdx);
+    return checkVerticalWin(colIdx,rowIdx) ||
+    checkHorizontalWin(colIdx, rowIdx) ||
+    checkDiagonalWinNESW(colIdx,rowIdx) ||
+    checkDiagonalWinNWSE(colIdx,rowIdx) 
 
 }
+function checkDiagonalWinNWSE(colIdx,rowIdx) {
+    const adjCountNW = countAdjacent(colIdx, rowIdx, 1, -1);
+    const adjCountSE = countAdjacent(colIdx, rowIdx, -1, 1);
+    return (adjCountNW + adjCountSE) >= 3 ? board[colIdx][rowIdx] : null;
+}
+function checkDiagonalWinNESW(colIdx,rowIdx) {
+    const adjCountNE = countAdjacent(colIdx, rowIdx, 1, 1);
+    const adjCountSW = countAdjacent(colIdx, rowIdx, -1, -1);
+    return (adjCountNE + adjCountSW) >= 3 ? board[colIdx][rowIdx] : null;
+}
+
+function checkHorizontalWin(colIdx,rowIdx) {
+    const adjCountLeft = countAdjacent(colIdx, rowIdx, -1, 0);
+    const adjCountRight = countAdjacent(colIdx, rowIdx, 1, 0);
+   return (adjCountLeft + adjCountRight) >= 3 ? board[colIdx][rowIdx] : null;
+}
 function checkVerticalWin(colIdx,rowIdx) {
-    return countAdjacent(colIdx, rowIdx, 0, -1) === 3 ? board[colIdx, rowIdx] : null;
+    return countAdjacent(colIdx, rowIdx, 0, -1) === 3 ? board[colIdx][rowIdx] : null;
 }
 
 function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
     //shortcut variable to the player value
     const player = board[colIdx][rowIdx];
-    console.log(player); 
- 
+    //track count of adjacent cells with the same player value
+    let count = 0;
+    //inititalize new coordinates
+    colIdx+=colOffset
+    rowIdx+=rowOffset
+    while (
+        //ensure colIdx is within bounds of board array
+        board[colIdx] !== undefined &&
+        board[colIdx][rowIdx]!== undefined && // need both lines because it'll throw an error if colIdx is undefined
+        board[colIdx][rowIdx] === player
+        ) {
+        count ++;
+        colIdx+=colOffset
+        rowIdx+=rowOffset
+            
+   }
+ return count;
 }
 
 
